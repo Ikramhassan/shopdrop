@@ -28,6 +28,13 @@ app.get("/api/settings/public", async (req, res) => {
 
 app.get("/api/health", (_, res) => res.json({ status: "ok" }));
 
+// AliExpress webhook — receives push notifications (order updates, logistics, etc.)
+app.post("/api/aliexpress/webhook", (req, res) => {
+  console.log("[AliExpress Webhook]", JSON.stringify(req.body));
+  // TODO: handle order/logistics updates from AliExpress
+  res.json({ success: true });
+});
+
 // Nginx handles routing: /api → this Express server (5000), / → Next.js (3000)
 // No proxy needed here.
 
