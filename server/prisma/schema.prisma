@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  phone     String?
+  address   String?
+  role      String   @default("customer")
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+model Order {
+  id                String      @id @default(cuid())
+  userId            String
+  user              User        @relation(fields: [userId], references: [id])
+  status            String      @default("pending")
+  aliexpressOrderId String?
+  totalCustomer     Float
+  totalAliexpress   Float
+  markup            Float
+  shippingAddress   String
+  paymentMethod     String?
+  paymentStatus     String      @default("pending")
+  notes             String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  items             OrderItem[]
+}
+
+model OrderItem {
+  id              String  @id @default(cuid())
+  orderId         String
+  order           Order   @relation(fields: [orderId], references: [id])
+  productId       String
+  productTitle    String
+  productImage    String
+  skuId           String?
+  variantName     String?
+  quantity        Int
+  priceAliexpress Float
+  priceCustomer   Float
+}
+
+model Settings {
+  id              String @id @default("singleton")
+  apiMode         String @default("affiliate")
+  markupPercent   Float  @default(20)
+  affiliateAppKey String @default("")
+  affiliateSecret String @default("")
+  storeName       String @default("ShopDrop")
+  storeLogo       String @default("")
+  currency        String @default("LKR")
+  usdToLkr        Float  @default(310)
+}
