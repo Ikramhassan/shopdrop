@@ -1,36 +1,52 @@
-name: Deploy to wow.idzlink.com
+name: Deploy ShopDrop
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /home/ikram/shopdrop
+            set -e
+            APP_DIR="/home/ikram/shopdrop"
 
-            # Pull latest code
-            git pull origin main
+            echo "=== Pulling latest code ==="
+            cd $APP_DIR
+            git pull origin master
 
-            # Install server dependencies if changed
-            cd server
-            npm install
+            echo "=== Installing server dependencies ==="
+            cd $APP_DIR/server
+            npm install --omit=dev
 
-            # Rebuild client if changed
-            cd ../client
+            echo "=== Installing client dependencies & building ==="
+            cd $APP_DIR/client
             npm install
             npm run build
 
-            # Restart app
-            pm2 restart shopdrop
+            echo "=== Copying Next.js static assets into standalone ==="
+            cp -r $APP_DIR/client/public $APP_DIR/client/.next/standalone/public
+            cp -r $APP_DIR/client/.next/static $APP_DIR/client/.next/standalone/.next/static
+
+            echo "=== Running DB migrations ==="
+            cd $APP_DIR/server
+            node src/seed.js
+
+            echo "=== Restarting PM2 services ==="
+            cd $APP_DIR
+            pm2 startOrRestart ecosystem.config.js --env production
             pm2 save
+
+            echo "=== Deploy complete ==="
