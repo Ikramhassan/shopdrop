@@ -28,17 +28,15 @@ jobs:
             git pull origin master
 
             echo "=== Writing .env ==="
-            cat > $APP_DIR/server/.env << 'ENVEOF'
-DATABASE_URL="postgresql://pgadmin:StrongPassword123!@pgadmin.idzlink.com:5432/shopdrop"
-DATABASE_SSL=false
-JWT_SECRET="shopdrop-jwt-secret-idzlink-2024"
-PORT=5000
-NODE_ENV=production
-ALLOWED_ORIGINS="https://wow.idzlink.com,http://localhost:3000"
-NEXT_PORT=3000
-ALIEXPRESS_APP_KEY="535520"
-ALIEXPRESS_APP_SECRET="hXeTo0df1I8euXwu27TXWg9V14tx2VgN"
-ENVEOF
+            printf 'DATABASE_URL="postgresql://pgadmin:StrongPassword123!@pgadmin.idzlink.com:5432/shopdrop"\n' > $APP_DIR/server/.env
+            printf 'DATABASE_SSL=false\n' >> $APP_DIR/server/.env
+            printf 'JWT_SECRET="shopdrop-jwt-secret-idzlink-2024"\n' >> $APP_DIR/server/.env
+            printf 'PORT=5000\n' >> $APP_DIR/server/.env
+            printf 'NODE_ENV=production\n' >> $APP_DIR/server/.env
+            printf 'ALLOWED_ORIGINS="https://wow.idzlink.com,http://localhost:3000"\n' >> $APP_DIR/server/.env
+            printf 'NEXT_PORT=3000\n' >> $APP_DIR/server/.env
+            printf 'ALIEXPRESS_APP_KEY="535520"\n' >> $APP_DIR/server/.env
+            printf 'ALIEXPRESS_APP_SECRET="hXeTo0df1I8euXwu27TXWg9V14tx2VgN"\n' >> $APP_DIR/server/.env
 
             echo "=== Installing server dependencies ==="
             cd $APP_DIR/server
