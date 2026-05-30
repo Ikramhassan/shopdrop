@@ -1,0 +1,36 @@
+name: Deploy to wow.idzlink.com
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/ikram/shopdrop
+
+            # Pull latest code
+            git pull origin main
+
+            # Install server dependencies if changed
+            cd server
+            npm install
+
+            # Rebuild client if changed
+            cd ../client
+            npm install
+            npm run build
+
+            # Restart app
+            pm2 restart shopdrop
+            pm2 save
