@@ -28,21 +28,8 @@ app.get("/api/settings/public", async (req, res) => {
 
 app.get("/api/health", (_, res) => res.json({ status: "ok" }));
 
-// In production: serve the built Next.js standalone app via proxy
-// The Next.js app runs on PORT+1 (e.g. 3000) and we proxy non-API requests to it
-if (process.env.NODE_ENV === "production") {
-  const { createProxyMiddleware } = require("http-proxy-middleware");
-  const nextPort = parseInt(process.env.PORT || 5000) + 1; // 3001 if API is on 5000, or 3000
-
-  app.use(
-    "/",
-    createProxyMiddleware({
-      target: `http://localhost:${process.env.NEXT_PORT || 3000}`,
-      changeOrigin: true,
-      ws: true,
-    })
-  );
-}
+// Nginx handles routing: /api → this Express server (5000), / → Next.js (3000)
+// No proxy needed here.
 
 const PORT = process.env.PORT || 5000;
 
