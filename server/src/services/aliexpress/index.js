@@ -1,14 +1,14 @@
 const affiliateApi = require("./affiliate");
 const scraperApi = require("./scraper");
 const rapidApi = require("./rapidapi");
-const db = require("../../db");
+const { db } = require("../../db");
 
-function getSettings() {
-  return db.prepare("SELECT * FROM settings WHERE id = 'singleton'").get();
+async function getSettings() {
+  return db.get("SELECT * FROM settings WHERE id = 'singleton'");
 }
 
 async function searchProducts(params) {
-  const settings = getSettings();
+  const settings = await getSettings();
   const markup = settings.markup_percent / 100;
   const rate = settings.usd_to_lkr;
 
@@ -35,7 +35,7 @@ async function searchProducts(params) {
 }
 
 async function getProductDetail(params) {
-  const settings = getSettings();
+  const settings = await getSettings();
   const markup = settings.markup_percent / 100;
   const rate = settings.usd_to_lkr;
 

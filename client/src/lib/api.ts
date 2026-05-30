@@ -1,6 +1,14 @@
 import axios from "axios";
 
-const api = axios.create({ baseURL: "http://localhost:5000/api" });
+// In production the Next.js app is served behind the same domain,
+// so API calls go to /api (same origin). In dev, the API runs on port 5000.
+const baseURL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  (typeof window !== "undefined" && window.location.hostname !== "localhost"
+    ? "/api"
+    : "http://localhost:5000/api");
+
+const api = axios.create({ baseURL });
 
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {

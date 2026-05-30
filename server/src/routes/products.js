@@ -5,9 +5,7 @@ router.get("/search", async (req, res) => {
   try {
     const { q = "trending", page = 1, pageSize = 20 } = req.query;
     const result = await aliexpress.searchProducts({
-      query: q,
-      page: parseInt(page),
-      pageSize: parseInt(pageSize),
+      query: q, page: parseInt(page), pageSize: parseInt(pageSize),
     });
     res.json(result);
   } catch (err) {
