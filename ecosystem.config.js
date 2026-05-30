@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "shopdrop-api",
-      cwd: "./server",
+      cwd: "/home/ikram/shopdrop/server",
       script: "src/index.js",
       env_production: {
         NODE_ENV: "production",
@@ -11,7 +11,7 @@ module.exports = {
     },
     {
       name: "shopdrop-web",
-      cwd: "./client",
+      cwd: "/home/ikram/shopdrop/client",
       script: ".next/standalone/server.js",
       env_production: {
         NODE_ENV: "production",
