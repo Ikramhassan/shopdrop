@@ -46,7 +46,8 @@ async function searchProducts({ query, page = 1, pageSize = 20, appKey, appSecre
   const data = res.data?.aliexpress_affiliate_product_query_response?.resp_result;
 
   if (!data || data.resp_code !== 200) {
-    throw new Error(data?.resp_msg || "AliExpress API error");
+    console.error("[Affiliate] API error response:", JSON.stringify(res.data));
+    throw new Error(`AliExpress API error: code=${data?.resp_code} msg=${data?.resp_msg}`);
   }
 
   const products = data.result?.products?.product || [];

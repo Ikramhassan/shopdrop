@@ -13,18 +13,24 @@ async function searchProducts(params) {
   const rate = settings.usd_to_lkr;
 
   let result;
-  if (settings.api_mode === "affiliate") {
-    result = await affiliateApi.searchProducts({
-      ...params,
-      appKey: settings.affiliate_app_key,
-      appSecret: settings.affiliate_secret,
-    });
-  } else if (settings.api_mode === "rapidapi") {
-    result = await rapidApi.searchProducts({
-      ...params,
-      apiKey: settings.rapidapi_key,
-    });
-  } else {
+  try {
+    if (settings.api_mode === "affiliate") {
+      result = await affiliateApi.searchProducts({
+        ...params,
+        appKey: settings.affiliate_app_key,
+        appSecret: settings.affiliate_secret,
+      });
+    } else if (settings.api_mode === "rapidapi") {
+      result = await rapidApi.searchProducts({
+        ...params,
+        apiKey: settings.rapidapi_key,
+      });
+    } else {
+      result = await scraperApi.searchProducts(params);
+    }
+  } catch (err) {
+    console.error(`[AliExpress:${settings.api_mode}] searchProducts failed:`, err.message);
+    // Fallback to scraper/mock so site always shows products
     result = await scraperApi.searchProducts(params);
   }
 
@@ -40,18 +46,23 @@ async function getProductDetail(params) {
   const rate = settings.usd_to_lkr;
 
   let product;
-  if (settings.api_mode === "affiliate") {
-    product = await affiliateApi.getProductDetail({
-      ...params,
-      appKey: settings.affiliate_app_key,
-      appSecret: settings.affiliate_secret,
-    });
-  } else if (settings.api_mode === "rapidapi") {
-    product = await rapidApi.getProductDetail({
-      ...params,
-      apiKey: settings.rapidapi_key,
-    });
-  } else {
+  try {
+    if (settings.api_mode === "affiliate") {
+      product = await affiliateApi.getProductDetail({
+        ...params,
+        appKey: settings.affiliate_app_key,
+        appSecret: settings.affiliate_secret,
+      });
+    } else if (settings.api_mode === "rapidapi") {
+      product = await rapidApi.getProductDetail({
+        ...params,
+        apiKey: settings.rapidapi_key,
+      });
+    } else {
+      product = await scraperApi.getProductDetail(params);
+    }
+  } catch (err) {
+    console.error(`[AliExpress:${settings.api_mode}] getProductDetail failed:`, err.message);
     product = await scraperApi.getProductDetail(params);
   }
 
