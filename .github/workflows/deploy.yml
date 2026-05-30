@@ -19,7 +19,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          envs: DB_URL,JWT_SECRET,ALLOWED_ORIGINS
           script: |
             set -e
             APP_DIR="/home/ikram/shopdrop"
@@ -30,16 +29,16 @@ jobs:
 
             echo "=== Writing .env ==="
             cat > $APP_DIR/server/.env << 'ENVEOF'
-            DATABASE_URL="postgresql://pgadmin:StrongPassword123!@pgadmin.idzlink.com:5432/shopdrop"
-            DATABASE_SSL=false
-            JWT_SECRET="shopdrop-jwt-secret-idzlink-2024"
-            PORT=5000
-            NODE_ENV=production
-            ALLOWED_ORIGINS="https://wow.idzlink.com,http://localhost:3000"
-            NEXT_PORT=3000
-            ALIEXPRESS_APP_KEY=""
-            ALIEXPRESS_APP_SECRET=""
-            ENVEOF
+DATABASE_URL="postgresql://pgadmin:StrongPassword123!@pgadmin.idzlink.com:5432/shopdrop"
+DATABASE_SSL=false
+JWT_SECRET="shopdrop-jwt-secret-idzlink-2024"
+PORT=5000
+NODE_ENV=production
+ALLOWED_ORIGINS="https://wow.idzlink.com,http://localhost:3000"
+NEXT_PORT=3000
+ALIEXPRESS_APP_KEY="535520"
+ALIEXPRESS_APP_SECRET="hXeTo0df1I8euXwu27TXWg9V14tx2VgN"
+ENVEOF
 
             echo "=== Installing server dependencies ==="
             cd $APP_DIR/server
